@@ -4,7 +4,9 @@
 	"type": "module",
 	"main": "index.js",
 	"scripts": {
+		"build:end": "wireit",
 		"build": "wireit",
+		"build:rollup": "node .build/logtime.js && rollup -c && npm run build:move-declarations && node .build/logtime.js --end",
 		"build:ts": "wireit",
 		"build:move-declarations": "wireit"
 	},
@@ -13,7 +15,8 @@
 			"dependencies": [
 				"build:ts",
 				"build:esbuild"
-			]
+			],
+			"command": "npm run build:end"
 		},
 		"build:ts": {
 			"command": "tsc --pretty",
@@ -25,6 +28,9 @@
 			"output": [
 				"out/index.d.ts",
 				"out/index.js"
+			],
+			"dependencies": [
+				"build:start"
 			]
 		},
 		"build:move-declarations": {
@@ -38,6 +44,12 @@
 			"output": [
 				"*.d.ts"
 			]
+		},
+		"build:start": {
+			"command": "node .build/logtime.js"
+		},
+		"build:end": {
+			"command": "node .build/logtime.js --end"
 		},
 		"build:esbuild": {
 			"command": "node esbuild.config.js",
@@ -60,6 +72,9 @@
 		"index.js.LEGAL.txt"
 	],
 	"devDependencies": {
-		"lit": "^2.7.6"
+		"@rollup/plugin-typescript": "^11.1.2",
+		"lit": "^2.7.6",
+		"rollup": "^3.26.2",
+		"tslib": "^2.6.0"
 	}
 }
